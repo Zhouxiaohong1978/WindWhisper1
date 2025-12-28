@@ -134,6 +134,26 @@ struct HealingView: View {
 
     private var nowPlayingCard: some View {
         VStack(spacing: 20) {
+            // 顶部操作按钮
+            if let bgm = player.currentBGM {
+                HStack {
+                    Spacer()
+
+                    Button(action: { ShareManager.shared.shareBGM(bgm) }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 18))
+                            .foregroundColor(ZenTheme.textSecondary)
+                    }
+
+                    Button(action: { deleteCurrentBGM(bgm) }) {
+                        Image(systemName: "trash")
+                            .font(.system(size: 18))
+                            .foregroundColor(.red.opacity(0.8))
+                    }
+                    .padding(.leading, 16)
+                }
+            }
+
             // 可视化区域
             ZStack {
                 Circle()
@@ -323,6 +343,12 @@ struct HealingView: View {
         if player.currentBGM?.id == bgm.id {
             player.stop()
         }
+        StorageManager.shared.deleteBGM(bgm.id)
+        recentBGMs.removeAll { $0.id == bgm.id }
+    }
+
+    private func deleteCurrentBGM(_ bgm: GeneratedBGM) {
+        player.stop()
         StorageManager.shared.deleteBGM(bgm.id)
         recentBGMs.removeAll { $0.id == bgm.id }
     }
