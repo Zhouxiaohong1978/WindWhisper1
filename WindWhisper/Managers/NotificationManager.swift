@@ -6,6 +6,7 @@
 //
 
 import Combine
+import UIKit
 import UserNotifications
 
 @MainActor
@@ -48,7 +49,7 @@ final class NotificationManager: ObservableObject {
 
     /// 设置每日任务提醒
     func scheduleDailyTaskReminder(hour: Int = 9, minute: Int = 0) async {
-        guard isAuthorized else {
+        if !isAuthorized {
             let granted = await requestAuthorization()
             guard granted else { return }
         }
@@ -150,11 +151,19 @@ final class NotificationManager: ObservableObject {
     // MARK: - Badge Management
 
     func clearBadge() {
-        UNUserNotificationCenter.current().setBadgeCount(0)
+        if #available(iOS 16.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(0)
+        } else {
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
     }
 
     func setBadge(_ count: Int) {
-        UNUserNotificationCenter.current().setBadgeCount(count)
+        if #available(iOS 16.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(count)
+        } else {
+            UIApplication.shared.applicationIconBadgeNumber = count
+        }
     }
 
     // MARK: - Cancel Notifications

@@ -131,7 +131,8 @@ struct GenerateView: View {
                             endPoint: .bottom
                         )
                     )
-                    .symbolEffect(.variableColor, isActive: isGenerating)
+                    .opacity(isGenerating ? (Date().timeIntervalSince1970.truncatingRemainder(dividingBy: 1) > 0.5 ? 1.0 : 0.7) : 1.0)
+                    .animation(isGenerating ? .easeInOut(duration: 0.5).repeatForever() : .default, value: isGenerating)
 
                 if isGenerating {
                     Text("\(Int(generator.progress * 100))%")

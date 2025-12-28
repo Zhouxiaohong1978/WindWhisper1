@@ -5,6 +5,7 @@
 //  采集界面 - 麦克风+LBS一键捕风声/鸟鸣
 //
 
+import CoreLocation
 import SwiftUI
 
 struct CaptureView: View {
