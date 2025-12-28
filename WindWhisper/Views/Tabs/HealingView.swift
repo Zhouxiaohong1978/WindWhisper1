@@ -15,10 +15,7 @@ struct HealingView: View {
     @State private var showGardenSheet = false
     @State private var listeningTime: TimeInterval = 0
     @State private var listeningTimer: Timer?
-
-    private var recentBGMs: [GeneratedBGM] {
-        StorageManager.shared.getRecentBGMs()
-    }
+    @State private var recentBGMs: [GeneratedBGM] = []
 
     private var dailyTasks: [DailyTask] {
         StorageManager.shared.getDailyTasks()
@@ -60,6 +57,7 @@ struct HealingView: View {
             }
         }
         .onAppear {
+            recentBGMs = StorageManager.shared.getRecentBGMs()
             setupListeningTimer()
             Task {
                 await notification.scheduleDailyTaskReminder()
@@ -326,6 +324,7 @@ struct HealingView: View {
             player.stop()
         }
         StorageManager.shared.deleteBGM(bgm.id)
+        recentBGMs.removeAll { $0.id == bgm.id }
     }
 
     private func styleColor(for style: BGMStyle) -> Color {
