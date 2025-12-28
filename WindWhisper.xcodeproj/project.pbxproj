@@ -256,7 +256,6 @@
 				DEVELOPMENT_TEAM = PW83W8JG6H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = WindWhisper/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "WindWhisper需要获取您的位置信息，以便记录您采集声音的地点。";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper需要使用麦克风来采集户外自然声音。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -293,7 +292,6 @@
 				DEVELOPMENT_TEAM = PW83W8JG6H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = WindWhisper/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "WindWhisper需要获取您的位置信息，以便记录您采集声音的地点。";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "WindWhisper需要使用麦克风来采集户外自然声音。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

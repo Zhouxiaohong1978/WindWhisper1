@@ -5,8 +5,9 @@
 //  声音分类服务 - Core ML模型分类 wind/bird/rain
 //
 
-import Foundation
 import Accelerate
+import Combine
+import Foundation
 
 @MainActor
 final class SoundClassifierService: ObservableObject {
