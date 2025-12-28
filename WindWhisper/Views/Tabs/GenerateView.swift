@@ -335,6 +335,7 @@ struct RecordingPickerSheet: View {
     let recordings: [SoundRecording]
     @Binding var selectedRecording: SoundRecording?
     @Environment(\.dismiss) private var dismiss
+    @State private var localRecordings: [SoundRecording] = []
 
     var body: some View {
         NavigationView {
@@ -342,7 +343,7 @@ struct RecordingPickerSheet: View {
                 ZenTheme.backgroundGradient
                     .ignoresSafeArea()
 
-                if recordings.isEmpty {
+                if localRecordings.isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "waveform.slash")
                             .font(.system(size: 50))
@@ -354,29 +355,49 @@ struct RecordingPickerSheet: View {
                             .foregroundColor(ZenTheme.textDisabled)
                     }
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 12) {
-                            ForEach(recordings) { recording in
-                                RecordingRow(recording: recording, isSelected: selectedRecording?.id == recording.id)
-                                    .onTapGesture {
-                                        selectedRecording = recording
-                                        dismiss()
-                                    }
-                            }
+                    List {
+                        ForEach(localRecordings) { recording in
+                            RecordingRow(recording: recording, isSelected: selectedRecording?.id == recording.id)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                                .onTapGesture {
+                                    selectedRecording = recording
+                                    dismiss()
+                                }
                         }
-                        .padding()
+                        .onDelete(perform: deleteRecording)
                     }
+                    .listStyle(.plain)
+                    .modifier(HideScrollBackgroundModifier())
                 }
             }
             .navigationTitle("选择录音")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                        .foregroundColor(ZenTheme.generateGold)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("取消") { dismiss() }
                         .foregroundColor(ZenTheme.textSecondary)
                 }
             }
+            .onAppear {
+                localRecordings = recordings
+            }
         }
+    }
+
+    private func deleteRecording(at offsets: IndexSet) {
+        for index in offsets {
+            let recording = localRecordings[index]
+            StorageManager.shared.deleteRecording(recording.id)
+            if selectedRecording?.id == recording.id {
+                selectedRecording = nil
+            }
+        }
+        localRecordings.remove(atOffsets: offsets)
     }
 }
 
@@ -644,6 +665,18 @@ struct SubscriptionSheet: View {
                 .foregroundColor(ZenTheme.textPrimary)
         }
         .font(.system(size: 15))
+    }
+}
+
+// MARK: - iOS Version Compatibility
+
+struct HideScrollBackgroundModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content.scrollContentBackground(.hidden)
+        } else {
+            content
+        }
     }
 }
 

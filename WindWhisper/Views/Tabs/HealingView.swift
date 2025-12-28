@@ -307,6 +307,25 @@ struct HealingView: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(PlainButtonStyle())
+        .contextMenu {
+            Button(action: { player.play(bgm: bgm) }) {
+                Label("播放", systemImage: "play.fill")
+            }
+            Button(action: { ShareManager.shared.shareBGM(bgm) }) {
+                Label("分享", systemImage: "square.and.arrow.up")
+            }
+            Divider()
+            Button(role: .destructive, action: { deleteBGM(bgm) }) {
+                Label("删除", systemImage: "trash")
+            }
+        }
+    }
+
+    private func deleteBGM(_ bgm: GeneratedBGM) {
+        if player.currentBGM?.id == bgm.id {
+            player.stop()
+        }
+        StorageManager.shared.deleteBGM(bgm.id)
     }
 
     private func styleColor(for style: BGMStyle) -> Color {
